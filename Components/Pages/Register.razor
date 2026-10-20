@@ -1,0 +1,132 @@
+@page "/"
+@page "/register"
+
+<PageTitle>Player Registration | FindMyPickle Tournaments</PageTitle>
+
+<div class="min-h-[90vh] flex items-center justify-center px-4 py-10">
+    <div class="max-w-lg w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+        
+        <!-- Header Strip -->
+        <div class="bg-gradient-to-r from-[#11418e] to-[#1c64d8] text-white p-6 text-center">
+            <div class="inline-flex items-center gap-2 mb-2">
+                <div class="bg-white text-[#11418e] font-black italic px-2 py-0.5 rounded text-sm shadow-inner">
+                    FMP
+                </div>
+                <span class="font-bold text-base tracking-tight">
+                    FindMyPickle<span class="text-blue-200 font-light">Tournaments</span>
+                </span>
+            </div>
+            <h2 class="text-xl font-bold tracking-tight">Player Registration</h2>
+            <p class="text-xs text-blue-100 mt-1">Join the network to track ratings, sign waivers, and enter events</p>
+        </div>
+
+        <!-- Form Body -->
+        <form class="p-6 sm:p-8 space-y-3.5 text-xs">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">First Name</label>
+                    <input 
+                        type="text" 
+                        placeholder="John" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition" 
+                    />
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Last Name</label>
+                    <input 
+                        type="text" 
+                        placeholder="Doe" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition" 
+                    />
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">Email Address</label>
+                <input 
+                    type="email" 
+                    placeholder="player@example.com" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition" 
+                />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Estimated Skill Rating (DUPR)</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="2.5">2.5 - Beginner</option>
+                        <option value="3.0">3.0 - Novice</option>
+                        <option value="3.5" selected>3.5 - Intermediate</option>
+                        <option value="4.0">4.0 - Advanced</option>
+                        <option value="4.5">4.5 - Expert</option>
+                        <option value="5.0">5.0+ - Open / Pro</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">DUPR ID (Optional)</label>
+                    <input 
+                        type="text" 
+                        placeholder="e.g. DUPR-90210" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                    />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Password</label>
+                    <input 
+                        type="password" 
+                        placeholder="Minimum 8 characters" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition" 
+                    />
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        placeholder="Re-enter password" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition" 
+                    />
+                </div>
+            </div>
+
+            <div class="flex items-start gap-2 pt-1">
+                <input 
+                    id="terms" 
+                    type="checkbox" 
+                    class="h-4 w-4 mt-0.5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+                />
+                <label for="terms" class="text-gray-600 leading-tight">
+                    I agree to the <a href="#" class="text-blue-600 underline">Terms of Service</a> and liability standards.
+                </label>
+            </div>
+
+            <!-- Create Account Button -> Navigate to Home -->
+            <a 
+                href="/home" 
+                class="w-full py-2.5 px-4 bg-[#124b9e] hover:bg-blue-700 text-white font-bold rounded-lg shadow transition flex items-center justify-center gap-1.5 mt-2 text-center"
+            >
+                <span>Create Account & Continue</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
+
+            <!-- Skip Directly to Home -->
+            <div class="text-center pt-1">
+                <a href="/home" class="text-gray-500 hover:text-gray-800 text-[11px] underline">
+                    Skip and browse tournaments as guest →
+                </a>
+            </div>
+
+            <!-- Link to Login -->
+            <p class="text-center text-gray-500 text-[11px] pt-3 border-t border-gray-100">
+                Already registered? 
+                <a href="/login" class="text-blue-600 font-bold hover:underline ml-1">Sign in here</a>
+            </p>
+        </form>
+
+    </div>
+</div>

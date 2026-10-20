@@ -1,7 +1,612 @@
-﻿@page "/"
+﻿@page "/home"
+@rendermode InteractiveServer
+@using SabagkitMidtermApp.Models
+@using SabagkitMidtermApp.Data
 
-<PageTitle>Home</PageTitle>
+<div class="bg-gray-100 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+    <!-- Primary Navigation Bar -->
+    <nav class="bg-[#124b9e] text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="flex items-center justify-between h-14">
+                
+                <!-- Mobile hamburger toggle & Brand Logo -->
+                <div class="flex items-center space-x-3">
+                    <button @onclick="() => isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-1.5 rounded text-white hover:bg-blue-800 focus:outline-none" aria-label="Toggle Navigation">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <a href="/home" class="flex items-center gap-2">
+                        <div class="bg-white text-[#124b9e] font-extrabold italic px-2 py-0.5 rounded tracking-tighter text-xl flex items-center shadow-inner">
+                            FMP
+                        </div>
+                        <span class="font-bold tracking-tight text-lg hidden sm:inline">FindMyPickle<span class="text-blue-200 font-light">Tournaments</span></span>
+                    </a>
+                </div>
 
-<h1>Hello, world!</h1>
+                <!-- Desktop Navigation Links -->
+                <div class="hidden lg:flex items-center space-x-1 text-sm font-medium">
+                    <a href="/home" class="px-2.5 py-1.5 border-b-2 border-white text-white font-semibold">Tournaments</a>
+                    <div class="relative group">
+                        <button class="px-2.5 py-1.5 rounded hover:bg-blue-800 transition flex items-center gap-1">
+                            <span>Pickleball Hub</span>
+                            <svg class="w-3 h-3 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 mt-1 w-44 bg-white text-gray-800 rounded-md shadow-lg py-1 border hidden group-hover:block z-50">
+                            <a href="#rules" class="block px-4 py-2 text-xs hover:bg-blue-50">USAP Rulebook</a>
+                            <a href="#dupr" class="block px-4 py-2 text-xs hover:bg-blue-50">DUPR Integration</a>
+                            <a href="#coaching" class="block px-4 py-2 text-xs hover:bg-blue-50">Coaching Clinics</a>
+                        </div>
+                    </div>
+                </div>
 
-Welcome to your new app.
+                <!-- Inline Auth Buttons -->
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <a href="/login" class="text-xs font-semibold px-3 py-1.5 rounded hover:bg-blue-800 transition text-white">
+                        Sign In
+                    </a>
+                    <a href="/" class="text-xs font-bold px-3.5 py-1.5 bg-[#bbf246] text-gray-900 rounded-md hover:bg-lime-400 transition shadow-sm">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Slide Menu -->
+        @if (isMobileMenuOpen)
+        {
+            <div class="lg:hidden bg-[#0d3b7e] px-4 pt-2 pb-4 space-y-2 text-sm border-t border-blue-800">
+                <a href="/home" class="block px-3 py-2 rounded bg-blue-800 font-semibold">Tournaments</a>
+                <button @onclick="OpenCreateModal" class="block w-full text-left px-3 py-2 bg-[#bbf246] text-gray-900 rounded font-bold">+ Create Tournament</button>
+                <div class="pt-2 border-t border-blue-800 flex items-center space-x-2">
+                    <a href="/login" class="flex-1 text-center py-2 text-xs font-semibold rounded bg-blue-900 hover:bg-blue-800 text-white">Sign In</a>
+                    <a href="/" class="flex-1 text-center py-2 text-xs font-bold rounded bg-[#bbf246] text-gray-900">Register</a>
+                </div>
+            </div>
+        }
+    </nav>
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-8 py-6 w-full">
+        <!-- Quick Actions -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-2 border-b border-gray-200">
+            <div class="flex flex-wrap items-center gap-2.5">
+                <button @onclick="ResetFilters" class="bg-[#1b5cb8] hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md shadow-sm transition text-xs sm:text-sm flex items-center gap-2">
+                    <span>Find a Tournament</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+                <button @onclick="ToggleMyTournaments" class="@(filterMyOnly ? "bg-blue-600 text-white" : "bg-blue-50 border border-blue-200 hover:bg-blue-100 text-[#124b9e]") font-medium px-4 py-2 rounded-md transition text-xs sm:text-sm flex items-center gap-1.5">
+                    <span>My Tournaments</span>
+                    <span class="bg-blue-700 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">@registeredTournamentIds.Count</span>
+                </button>
+            </div>
+
+            <div>
+                <button @onclick="OpenCreateModal" class="bg-[#1b5cb8] hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md shadow-sm transition text-xs sm:text-sm flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>Create a Tournament</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Strip -->
+        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                    @FilteredTournaments.Count Active Tournaments @(filterMyOnly ? "(My Events)" : "Worldwide")
+                </h1>
+                <p class="text-xs text-gray-500 mt-0.5">Sanctioned & unsanctioned pickleball competitions open for entry</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="relative">
+                    <input type="text"
+                           @bind="searchTerm"
+                           @bind:event="oninput"
+                           placeholder="Search by city, name, country..."
+                           class="pl-8 pr-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs w-56 sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" />
+                    <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+
+                <select @bind="selectedSkill" class="bg-white border border-gray-300 rounded-lg text-xs py-1.5 px-2.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                    <option value="ALL">All Skill Ratings (DUPR)</option>
+                    <option value="3.0">3.0 - Recreational</option>
+                    <option value="3.5">3.5 - Intermediate</option>
+                    <option value="4.0">4.0 - Advanced</option>
+                    <option value="4.5">4.5+ - Open / Pro</option>
+                </select>
+
+                <button @onclick="() => filterClosingOnly = !filterClosingOnly" class="@(filterClosingOnly ? "bg-blue-50 border-blue-500 text-blue-700 font-semibold" : "bg-white border-gray-300 text-gray-700") border text-xs py-1.5 px-3 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>Closing Soon Only</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Recommended Carousel -->
+        <section class="mt-4 mb-10">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-gray-900">Recommended Tournaments</h2>
+                    <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
+                        <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>@radiusLabel</span>
+                        <button @onclick="ChangeRadius" class="text-blue-600 underline font-medium hover:text-blue-800">Change</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-4 overflow-x-auto py-2 px-1">
+                @if (FilteredTournaments.Count == 0)
+                {
+                    <div class="p-8 text-center text-gray-500 w-full bg-white rounded-lg border">No tournaments found matching current filters.</div>
+                }
+                else
+                {
+                    @foreach (var t in FilteredTournaments)
+                    {
+                        var isReg = registeredTournamentIds.Contains(t.Id);
+                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm flex flex-col overflow-hidden relative min-w-[240px] max-w-[260px] flex-shrink-0 transition-transform hover:-translate-y-1">
+                            <div class="relative">
+                                @RenderGraphic(t)
+                                @if (t.IsClosingSoon)
+                                {
+                                    <div class="absolute top-2 left-2 bg-[#107040] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                                        Closing Soon
+                                    </div>
+                                }
+                                @if (isReg)
+                                {
+                                    <div class="absolute top-2 right-2 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow flex items-center gap-1">
+                                        Registered
+                                    </div>
+                                }
+                            </div>
+                            <div class="p-3.5 flex flex-col flex-grow justify-between text-left">
+                                <div>
+                                    <h3 class="font-bold text-xs sm:text-sm text-gray-900 leading-snug line-clamp-2" title="@t.Title">@t.Title</h3>
+                                    <p class="text-[11px] text-gray-500 mt-1 truncate">@t.Location</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">@t.DateRange</p>
+                                </div>
+                                <div class="mt-4 pt-2.5 border-t border-gray-100 flex items-center justify-between">
+                                    <span class="bg-[#15803d] text-white text-[11px] font-bold px-2 py-0.5 rounded">
+                                        @t.Currency $@t.Fee.ToString("F2")
+                                    </span>
+                                    <span class="text-[11px] text-gray-500">@t.PlayerCount players</span>
+                                </div>
+                                <div class="mt-2.5">
+                                    <button @onclick="() => OpenEntryModal(t)" class="w-full py-1.5 px-3 @(isReg ? "bg-gray-100 text-gray-700" : "bg-[#1b5cb8] text-white") text-xs font-semibold rounded hover:opacity-90">
+                                        @(isReg ? "Manage Entry" : "Enter Tournament")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </section>
+
+        <!-- All Events Grid & Table -->
+        <section class="mt-8">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-gray-900">All Featured Pickleball Events</h2>
+                    <p class="text-xs text-gray-500">Register directly for Singles, Doubles, and Mixed divisions</p>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-gray-500">View Mode:</span>
+                    <button @onclick='() => viewMode = "grid"' class="p-1.5 rounded @(viewMode == "grid" ? "bg-blue-100 text-blue-700 font-semibold" : "text-gray-600 hover:bg-gray-200")">Grid</button>
+                    <button @onclick='() => viewMode = "table"' class="p-1.5 rounded @(viewMode == "table" ? "bg-blue-100 text-blue-700 font-semibold" : "text-gray-600 hover:bg-gray-200")">Table</button>
+                </div>
+            </div>
+
+            @if (viewMode == "grid")
+            {
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    @foreach (var t in FilteredTournaments)
+                    {
+                        var isReg = registeredTournamentIds.Contains(t.Id);
+                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm flex flex-col overflow-hidden relative">
+                            @RenderGraphic(t)
+                            <div class="p-3.5 flex flex-col flex-grow justify-between">
+                                <div>
+                                    <h3 class="font-bold text-xs sm:text-sm text-gray-900 leading-snug line-clamp-2">@t.Title</h3>
+                                    <p class="text-[11px] text-gray-500 mt-1">@t.Location</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">@t.DateRange</p>
+                                </div>
+                                <div class="mt-4 pt-2.5 border-t border-gray-100 flex items-center justify-between">
+                                    <span class="bg-[#15803d] text-white text-[11px] font-bold px-2 py-0.5 rounded">
+                                        @t.Currency $@t.Fee.ToString("F2")
+                                    </span>
+                                    <span class="text-[11px] text-gray-500">@t.PlayerCount players</span>
+                                </div>
+                                <div class="mt-2.5">
+                                    <button @onclick="() => OpenEntryModal(t)" class="w-full py-1.5 px-3 @(isReg ? "bg-gray-100 text-gray-700" : "bg-[#1b5cb8] text-white") text-xs font-semibold rounded hover:opacity-90">
+                                        @(isReg ? "Manage Entry" : "Enter Tournament")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-600">
+                        <thead class="bg-gray-50 text-gray-700 uppercase font-semibold border-b">
+                            <tr>
+                                <th class="px-4 py-3">Tournament Name</th>
+                                <th class="px-4 py-3">Location</th>
+                                <th class="px-4 py-3">Dates</th>
+                                <th class="px-4 py-3">Fee</th>
+                                <th class="px-4 py-3">Registered</th>
+                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach (var t in FilteredTournaments)
+                            {
+                                var isReg = registeredTournamentIds.Contains(t.Id);
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-semibold text-gray-900">@t.Title</td>
+                                    <td class="px-4 py-3">@t.Location</td>
+                                    <td class="px-4 py-3 text-gray-500">@t.DateRange</td>
+                                    <td class="px-4 py-3 font-medium text-green-700">@t.Currency $@t.Fee.ToString("F2")</td>
+                                    <td class="px-4 py-3">@t.PlayerCount registered</td>
+                                    <td class="px-4 py-3">
+                                        @if (t.IsClosingSoon)
+                                        {
+                                            <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold">Closing Soon</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">Open</span>
+                                        }
+                                    </td>
+                                    <td class="px-4 py-3 text-right">
+                                        <button @onclick="() => OpenEntryModal(t)" class="px-2.5 py-1 text-xs font-semibold bg-[#124b9e] text-white rounded hover:bg-blue-700">
+                                            @(isReg ? "Edit Entry" : "Enter")
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+    </main>
+
+    <!-- Registration Modal -->
+    @if (showEntryModal && selectedTournament != null)
+    {
+        <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full max-h-[92vh] overflow-y-auto border border-gray-100">
+                <div class="relative bg-gradient-to-r from-[#11418e] to-[#1c64d8] text-white p-5 rounded-t-xl">
+                    <button @onclick="() => showEntryModal = false" class="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-1.5 rounded-full">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                    <span class="inline-block bg-[#bbf246] text-gray-900 text-[10px] font-bold px-2 py-0.5 rounded uppercase mb-2">Official Event Entry</span>
+                    <h3 class="text-lg sm:text-xl font-bold">@selectedTournament.Title</h3>
+                    <div class="flex items-center gap-4 text-xs text-blue-100 mt-2">
+                        <span>@selectedTournament.Location</span>
+                        <span>@selectedTournament.DateRange</span>
+                    </div>
+                </div>
+
+                <EditForm Model="registrationModel" OnValidSubmit="HandleRegistrationSubmit" class="p-5 sm:p-6 space-y-4 text-sm">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-700 mb-1">Select Division</label>
+                        <div class="space-y-2">
+                            @foreach (var d in selectedTournament.Divisions)
+                            {
+                                <label class="flex items-center justify-between p-2.5 border rounded-lg cursor-pointer hover:bg-blue-50 @(selectedDivision?.Id == d.Id ? "border-blue-500 bg-blue-50" : "border-gray-200")">
+                                    <div class="flex items-center gap-2">
+                                        <input type="radio" name="selectedDivision" checked="@(selectedDivision?.Id == d.Id)" @onchange="() => selectedDivision = d" />
+                                        <div>
+                                            <span class="font-semibold text-gray-800 text-xs">@d.Name</span>
+                                            <span class="ml-1 text-[10px] @(d.IsDoubles ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-600") px-1 rounded">@(d.IsDoubles ? "Doubles" : "Singles")</span>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-xs text-gray-900">@selectedTournament.Currency $@d.Fee.ToString("F2")</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
+                            <InputText @bind-Value="registrationModel.FullName" required class="w-full px-3 py-2 border rounded-lg text-xs" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                            <InputText @bind-Value="registrationModel.Email" type="email" required class="w-full px-3 py-2 border rounded-lg text-xs" />
+                        </div>
+                    </div>
+
+                    @if (selectedDivision != null && selectedDivision.IsDoubles)
+                    {
+                        <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                            <span class="text-xs font-semibold text-blue-900 block mb-2">Doubles Partner Details</span>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <InputText @bind-Value="registrationModel.PartnerName" placeholder="Partner Name" required class="w-full px-3 py-1.5 border rounded text-xs bg-white" />
+                                <InputText @bind-Value="registrationModel.PartnerDupr" placeholder="Partner DUPR (Optional)" class="w-full px-3 py-1.5 border rounded text-xs bg-white" />
+                            </div>
+                        </div>
+                    }
+
+                    <div class="flex items-start gap-2 pt-1">
+                        <InputCheckbox @bind-Value="registrationModel.AgreedToWaiver" required class="mt-1 h-4 w-4 rounded text-blue-600" />
+                        <label class="text-xs text-gray-500">I agree to USA Pickleball rules, tournament refund guidelines, and athlete liability waiver.</label>
+                    </div>
+
+                    <div class="bg-gray-50 p-3.5 rounded-lg border border-gray-200 mt-3 flex items-center justify-between">
+                        <div>
+                            <div class="text-[11px] text-gray-500">Total Entry Fee</div>
+                            <div class="text-lg font-bold text-gray-900">@selectedTournament.Currency $@(selectedDivision?.Fee.ToString("F2") ?? "0.00")</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" @onclick="() => showEntryModal = false" class="px-4 py-2 border rounded-lg text-xs font-semibold text-gray-600">Cancel</button>
+                            <button type="submit" class="px-5 py-2 bg-[#124b9e] text-white text-xs font-bold rounded-lg shadow">Complete Entry</button>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+
+    <!-- Create Tournament Modal -->
+    @if (showCreateModal)
+    {
+        <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-100">
+                <div class="bg-[#124b9e] text-white p-4 rounded-t-xl flex justify-between items-center">
+                    <h3 class="font-bold text-base sm:text-lg">Host / Sanction a Tournament</h3>
+                    <button @onclick="() => showCreateModal = false" class="text-white/80 hover:text-white">✕</button>
+                </div>
+                <EditForm Model="createModel" OnValidSubmit="HandleCreateTournamentSubmit" class="p-5 space-y-3.5 text-xs">
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Tournament Title</label>
+                        <InputText @bind-Value="createModel.Title" required class="w-full px-3 py-2 border rounded-lg" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">City, State / Region</label>
+                            <InputText @bind-Value="createModel.Location" required class="w-full px-3 py-2 border rounded-lg" />
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Country</label>
+                            <InputText @bind-Value="createModel.Country" required class="w-full px-3 py-2 border rounded-lg" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Entry Fee Base</label>
+                            <InputNumber @bind-Value="createModel.BaseFee" required class="w-full px-3 py-2 border rounded-lg" />
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Currency</label>
+                            <InputSelect @bind-Value="createModel.Currency" class="w-full px-3 py-2 border rounded-lg bg-white">
+                                <option value="USD">USD ($)</option>
+                                <option value="AUD">AUD ($)</option>
+                                <option value="NZD">NZD ($)</option>
+                                <option value="PHP">PHP (₱)</option>
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="pt-3 flex justify-end gap-2">
+                        <button type="button" @onclick="() => showCreateModal = false" class="px-4 py-2 border rounded-lg text-gray-600">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-[#124b9e] text-white font-semibold rounded-lg">Publish Tournament</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+
+    <!-- Success Confirmation Modal -->
+    @if (showSuccessModal)
+    {
+        <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl border border-gray-100">
+                <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-1">You're In!</h3>
+                <p class="text-xs text-gray-600 mb-4">@successMessage</p>
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-left text-xs mb-5 space-y-1">
+                    <div class="flex justify-between"><span class="text-gray-500">Confirmation:</span> <span class="font-mono font-bold">@confirmationCode</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Status:</span> <span class="text-green-700 font-semibold">Registered & Paid</span></div>
+                </div>
+                <button @onclick="() => showSuccessModal = false" class="w-full py-2.5 bg-[#124b9e] text-white font-bold rounded-lg text-sm shadow">Done</button>
+            </div>
+        </div>
+    }
+
+    <!-- Footer -->
+    <footer class="bg-[#0b2b63] text-gray-300 text-xs py-8 px-4 sm:px-8 mt-auto border-t border-blue-900">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="bg-white text-[#0b2b63] font-black italic px-2 py-0.5 rounded text-sm">FMP</div>
+                <span class="font-bold text-white text-sm">FindMyPickle<span class="text-blue-200 font-light">Tournaments</span></span>
+            </div>
+            <p class="text-gray-400 text-[11px] text-center">Made by <span class="text-white font-semibold">John Arcel Sabagkit</span></p>
+            <p class="text-gray-500 text-[11px] text-center">© 2026 FindMyPickle Tournaments. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+@code {
+    private List<TournamentEvent> tournaments = new();
+    private List<int> registeredTournamentIds = new() { 1 };
+
+    private string searchTerm = "";
+    private string selectedSkill = "ALL";
+    private bool filterClosingOnly = false;
+    private bool filterMyOnly = false;
+    private string viewMode = "grid";
+    private bool isMobileMenuOpen = false;
+    private bool searchInputFocus = false;
+
+    private string radiusLabel = "Showing tournaments within 6,403 mile radius of Thousand Oaks, Philippines";
+    private int radiusIndex = 0;
+    private readonly string[] radiusOptions = new[]
+    {
+        "Showing tournaments within 500 mile radius of Manila, Philippines",
+        "Showing tournaments within 250 mile radius of Austin, TX, USA",
+        "Showing tournaments worldwide"
+    };
+
+    // Modal controls
+    private bool showEntryModal = false;
+    private bool showCreateModal = false;
+    private bool showSuccessModal = false;
+
+    private TournamentEvent? selectedTournament;
+    private EventDivision? selectedDivision;
+    private PlayerRegistrationModel registrationModel = new();
+    private CreateTournamentModel createModel = new();
+
+    private string confirmationCode = "";
+    private string successMessage = "";
+
+    protected override void OnInitialized()
+    {
+        tournaments = TournamentSeedData.GetTournaments();
+    }
+
+    private List<TournamentEvent> FilteredTournaments
+    {
+        get
+        {
+            return tournaments.Where(t =>
+            {
+                if (!string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    var q = searchTerm.Trim().ToLower();
+                    if (!t.Title.ToLower().Contains(q) && !t.Location.ToLower().Contains(q))
+                        return false;
+                }
+                if (filterClosingOnly && !t.IsClosingSoon)
+                    return false;
+                if (filterMyOnly && !registeredTournamentIds.Contains(t.Id))
+                    return false;
+                if (selectedSkill != "ALL" && !t.Divisions.Any(d => d.Name.Contains(selectedSkill)))
+                    return false;
+                return true;
+            }).ToList();
+        }
+    }
+
+    private void ToggleMyTournaments() => filterMyOnly = !filterMyOnly;
+
+    private void ResetFilters()
+    {
+        searchTerm = "";
+        selectedSkill = "ALL";
+        filterClosingOnly = false;
+        filterMyOnly = false;
+    }
+
+    private void ChangeRadius()
+    {
+        radiusIndex = (radiusIndex + 1) % radiusOptions.Length;
+        radiusLabel = radiusOptions[radiusIndex];
+    }
+
+    private void OpenEntryModal(TournamentEvent t)
+    {
+        selectedTournament = t;
+        selectedDivision = t.Divisions.FirstOrDefault();
+        registrationModel = new PlayerRegistrationModel
+        {
+            TournamentId = t.Id,
+            DivisionId = selectedDivision?.Id ?? 0
+        };
+        showEntryModal = true;
+    }
+
+    private void HandleRegistrationSubmit()
+    {
+        if (selectedTournament == null) return;
+
+        if (!registeredTournamentIds.Contains(selectedTournament.Id))
+        {
+            registeredTournamentIds.Add(selectedTournament.Id);
+            selectedTournament.PlayerCount++;
+        }
+
+        confirmationCode = $"PT-{Random.Shared.Next(1000, 9999)}-{selectedTournament.Country[..Math.Min(2, selectedTournament.Country.Length)].ToUpper()}";
+        successMessage = $"Congratulations {registrationModel.FullName}! You have entered {selectedTournament.Title}.";
+        showEntryModal = false;
+        showSuccessModal = true;
+    }
+
+    private void OpenCreateModal()
+    {
+        createModel = new CreateTournamentModel();
+        showCreateModal = true;
+    }
+
+    private void HandleCreateTournamentSubmit()
+    {
+        var newId = tournaments.Count + 1;
+        var newTournament = new TournamentEvent
+        {
+            Id = newId,
+            Title = createModel.Title,
+            Subtitle = createModel.Title.ToUpper(),
+            Location = $"{createModel.Location}, {createModel.Country}",
+            Country = createModel.Country,
+            DateRange = $"{createModel.StartDate:MMM dd, yyyy} - {createModel.EndDate:MMM dd, yyyy}",
+            Currency = createModel.Currency,
+            Fee = createModel.BaseFee,
+            PlayerCount = 1,
+            IsClosingSoon = false,
+            GraphicType = "generic",
+            Divisions = new List<EventDivision>
+            {
+                new EventDivision { Id = newId * 100 + 1, Name = "Open Singles", Fee = createModel.BaseFee, IsDoubles = false },
+                new EventDivision { Id = newId * 100 + 2, Name = "Open Doubles", Fee = createModel.BaseFee + 15m, IsDoubles = true }
+            }
+        };
+
+        tournaments.Insert(0, newTournament);
+        showCreateModal = false;
+    }
+
+    private RenderFragment RenderGraphic(TournamentEvent t) => builder =>
+    {
+        builder.OpenElement(0, "div");
+        builder.AddAttribute(1, "class", "h-32 flex flex-col items-center justify-center relative p-3 border-b text-center overflow-hidden " +
+            (t.GraphicType switch
+            {
+                "world-champ" => "bg-white text-gray-800",
+                "adult-camp" => "bg-[#1b3424] text-amber-200",
+                "auckland" => "bg-gradient-to-br from-sky-50 via-blue-100 to-sky-200 text-sky-900",
+                "indoor-rally" => "bg-[#312519] text-amber-100",
+                "singles-slam" => "bg-gradient-to-tr from-gray-900 to-slate-800 text-white",
+                "nanjing-ppa" => "bg-gradient-to-r from-blue-950 via-indigo-900 to-blue-900 text-white",
+                _ => "bg-gradient-to-r from-blue-700 to-indigo-800 text-white"
+            }));
+
+        builder.OpenElement(2, "span");
+        builder.AddAttribute(3, "class", "text-xs font-bold tracking-widest uppercase");
+        builder.AddContent(4, t.Subtitle);
+        builder.CloseElement();
+
+        builder.CloseElement();
+    };
+}

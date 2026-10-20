@@ -5,16 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@4"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="SabagkitMidtermApp.styles.css" />
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Teko', 'sans-serif'],
+            },
+            colors: {
+              ptBlue: {
+                50: '#eef5fc',
+                100: '#d7e8f8',
+                500: '#1e68d7',
+                600: '#1552b0',
+                700: '#11418e',
+                800: '#0e3472',
+                900: '#0a234f',
+              },
+              pickleLime: '#bbf246',
+              closingRed: '#ef4444',
+              badgeGreen: '#15803d'
+            }
+          }
+        }
+      }
+    </script>
 
     <HeadOutlet />
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800 font-sans antialiased min-h-screen flex flex-col" data-enhance="false">
     <Routes />
     <script src="_framework/blazor.web.js"></script>
 </body>

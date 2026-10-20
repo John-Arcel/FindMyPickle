@@ -1,5 +1,7 @@
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\appsettings.json
+C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\package-lock.json
+C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\package.json
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\SabagkitMidtermApp.staticwebassets.runtime.json
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\SabagkitMidtermApp.exe
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\SabagkitMidtermApp.deps.json
@@ -11,6 +13,7 @@ C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\Sa
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\SabagkitMidtermApp.AssemblyInfo.cs
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\SabagkitMidtermApp.csproj.CoreCompileInputs.cache
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\SabagkitMidtermApp.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\SabagkitMidtermApp.sourcelink.json
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\staticwebassets\msbuild.SabagkitMidtermApp.Microsoft.AspNetCore.StaticWebAssets.props
@@ -27,5 +30,3 @@ C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\re
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\SabagkitMidtermApp.pdb
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\SabagkitMidtermApp.genruntimeconfig.cache
 C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\obj\Debug\net8.0\ref\SabagkitMidtermApp.dll
-C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\package-lock.json
-C:\Users\L23Y16W35\Desktop\Midterm Sprint\SabagkitMidtermApp\bin\Debug\net8.0\package.json
