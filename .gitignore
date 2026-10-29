@@ -1,0 +1,7 @@
+bin/
+obj/
+node_modules/
+*.exe
+tailwindcss.exe
+.vs/
+.vscode/
