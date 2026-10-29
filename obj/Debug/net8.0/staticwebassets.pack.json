@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
+      "Id": "C:\\Users\\L23Y16W35\\Desktop\\Midterm Sprint\\SabagkitMidtermApp\\wwwroot\\images\\pickleball-background.png",
+      "PackagePath": "staticwebassets\\images\\pickleball-background.png"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.SabagkitMidtermApp.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

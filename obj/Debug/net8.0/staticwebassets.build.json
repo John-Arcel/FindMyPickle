@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "L+gLyjSenK3FUnH/kn1Mn1kX9+uEPAd0Yv0rXuaL7G0=",
+  "Hash": "Yde9GY0zTiG5YWmVJn/kkO3SD98JdeLnxmqyg8ebrYs=",
   "Source": "SabagkitMidtermApp",
   "BasePath": "_content/SabagkitMidtermApp",
   "Mode": "Default",
@@ -129,6 +129,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.png"
+    },
+    {
+      "Identity": "C:\\Users\\L23Y16W35\\Desktop\\Midterm Sprint\\SabagkitMidtermApp\\wwwroot\\images\\pickleball-background.png",
+      "SourceId": "SabagkitMidtermApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\L23Y16W35\\Desktop\\Midterm Sprint\\SabagkitMidtermApp\\wwwroot\\",
+      "BasePath": "_content/SabagkitMidtermApp",
+      "RelativePath": "images/pickleball-background.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\pickleball-background.png"
     }
   ]
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SabagkitMidtermApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+889c4734072c366133773fc14fc76f306cada62a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14411611aaab42e2df00c6723d44744fed5c438c")]
 [assembly: System.Reflection.AssemblyProductAttribute("SabagkitMidtermApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SabagkitMidtermApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
